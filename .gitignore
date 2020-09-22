@@ -276,3 +276,5 @@ quda/media/
 .env
 .envs/*
 !.envs/.local/
+
+qudaDB

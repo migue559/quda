@@ -11,7 +11,14 @@ q-layout
             .col.text-h6.ellipsis
               | HERRAMIENTA DE CALIDAD DE DATOS
         q-card-section
-          q-form.q-gutter-md
+          template(role='alert', v-if="errors.length >= 1" v-bind:class='{ show: errors.length }')
+            span.text-negative(v-for='(error, i) in errors', :key='i')
+              | {{ error }}
+          q-form.q-gutter-md(
+            ref='form'
+            lazy-validation
+            @submit.stop.prevent='onSubmit'
+          )
             q-input(
               filled=''
               v-model='form.username'
@@ -33,10 +40,16 @@ q-layout
             .col-6
               q-item
                 q-checkbox.full-width(dense='', outlined='', v-model='form.remember', label='Recuerdame')
-            q-btn(label='INGRESAR', to='/', type='button', color='primary')
+            q-btn(
+              label='INGRESAR'
+              type='submmit'
+              color='primary'
+            )
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { LOGIN, LOGOUT } from '@/store/auth.store'
 export default {
   data () {
     return {
@@ -46,6 +59,28 @@ export default {
         remember: true
       },
       isPwd: 'password'
+    }
+  },
+  computed: {
+    ...mapState({
+      errors: state => state.auth.errors
+    })
+  },
+  methods: {
+    validate () {
+      if (this.$refs.form.validate()) return 1
+      return 0
+    },
+    onSubmit () {
+      if (this.validate()) {
+        const username = this.form.username
+        const password = this.form.password
+        this.$store.dispatch(LOGOUT)
+        this.$store.dispatch(LOGIN, { username, password })
+          .then((data) => {
+            if (data) this.$router.push({ name: 'dashboard' })
+          })
+      }
     }
   }
 }

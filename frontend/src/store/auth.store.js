@@ -85,11 +85,11 @@ const mutations = {
   [SET_AUTH] (state, token) {
     state.isAuthenticated = true
     state.user = {
-      organization: token.mriuser.organization,
-      permissions: token.mriuser.getAllPermissions.substring(1, token.mriuser.getAllPermissions.length - 1).replace(/ /g, '').replace(/'/g, '').split(','),
-      username: token.mriuser.username,
-      visibleUsername: token.mriuser.visibleUsername,
-      id: token.mriuser.id
+      organization: token.coreuser.organization,
+      permissions: token.coreuser.getAllPermissions.substring(1, token.coreuser.getAllPermissions.length - 1).replace(/ /g, '').replace(/'/g, '').split(','),
+      username: token.coreuser.username,
+      visibleUsername: token.coreuser.visibleUsername,
+      id: token.coreuser.id
     }
     if ('token' in token) JwtService.saveToken(token)
   },

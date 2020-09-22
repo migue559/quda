@@ -11,7 +11,7 @@ export const getUsername = () => {
 
 export const saveToken = token => {
   window.localStorage.setItem(ID_TOKEN_KEY, token.token)
-  window.localStorage.setItem(ID_USERNAME, token.mriuser.id)
+  window.localStorage.setItem(ID_USERNAME, token.coreuser.id)
 }
 
 export const destroyToken = () => {

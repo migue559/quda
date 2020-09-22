@@ -1,21 +1,21 @@
 <template lang="pug">
 q-layout(view='hHr lpr fFr')
-  q-header.bg-dark.text-white(elevated=false, height-hint='98')
+  q-header.bg-dark.text-white(elevated=false height-hint='98')
     q-toolbar
       q-toolbar-title.text-subtitle1.text-weight-light
         q-avatar.q-mr-md
           img(src='~assets/img/dashboard/logo.png')
         | Instituto Mexicano del Seguro Social
-      q-btn.q-mr-md(flat='', round='', dense='', icon='home')
+      q-btn.q-mr-md(flat='' round='' dense='' icon='home')
         q-tooltip(content-class='bg-accent') INICIO
-      q-btn.q-mr-md(flat='', round='', dense='', icon='account_box')
+      q-btn.q-mr-md(flat='' round='' dense='' icon='account_box')
         q-tooltip(content-class='bg-accent') PERFIL
-      q-btn(flat='', round='', dense='', icon='login', to='/')
+      q-btn(@click='onLogout' flat='' round='' dense='' icon='login')
         q-tooltip(content-class='bg-accent') SALIR
-      q-btn.q-ml-xl(dense='', flat='', round='', icon='menu', @click='right = !right')
+      q-btn.q-ml-xl(dense='' flat='' round='' icon='menu' @click='right = !right')
         q-tooltip(content-class='bg-accent') MENU
     q-toolbar.bg-secondary(style="min-height: 2px;")
-  q-drawer(show-if-above='', v-model='right', side='right', elevated='')
+  q-drawer(show-if-above='' v-model='right' side='right' elevated='')
     RigthAside
   q-page-container
     router-view
@@ -32,6 +32,7 @@ q-layout(view='hHr lpr fFr')
 </style>
 
 <script>
+import { LOGOUT } from '@/store/auth.store'
 import { mapGetters } from 'vuex'
 import RigthAside from '@/layouts/aside/RigthAside.vue'
 export default {
@@ -41,6 +42,13 @@ export default {
   data () {
     return {
       right: false
+    }
+  },
+  methods: {
+    onLogout () {
+      this.$store
+        .dispatch(LOGOUT)
+        .then(() => this.$router.push({ name: 'login' }))
     }
   },
   mounted () {

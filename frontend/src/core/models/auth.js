@@ -11,7 +11,7 @@ export const GET_TOKEN = (credentials) => {
         token
         payload
         refreshExpiresIn
-        mriuser {
+        coreuser {
           id
           username
           visibleUsername
@@ -40,7 +40,7 @@ export const VERIFY_TOKEN = (token, user) => {
     {
       payload
     }
-    mriuser( id: "${user}" ) {
+    coreuser( id: "${user}" ) {
       id
       username
       visibleUsername

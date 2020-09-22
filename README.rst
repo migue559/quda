@@ -75,7 +75,8 @@ As with any shell command that we wish to run in our container, this is done usi
 
     $ docker-compose -f local.yml run --rm django python manage.py migrate
     $ docker-compose -f local.yml run --rm django python manage.py createsuperuser
-    $ (cd frontend && npm i)
+    $ cd frontend
+    $ npm i
 
 Here, ``django`` is the target service we are executing the commands against.
 
@@ -87,11 +88,12 @@ This brings up both Django and PostgreSQL. The first time it is run it might tak
 Open a terminal at the project root and run the following for local development::
 
     $ docker-compose -f local.yml up
-    $ (cd frontend && npm run serve)
+    $ cd frontend
+    $ npm run serve
 
 Run on
 
-    http://0.0.0.0:8000/graphql/
+    http://localhost:8000/graphql/
 
 
 (Optionally) Designate your Docker Development Server IP

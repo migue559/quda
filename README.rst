@@ -87,6 +87,7 @@ This brings up both Django and PostgreSQL. The first time it is run it might tak
 Open a terminal at the project root and run the following for local development::
 
     $ docker-compose -f local.yml up
+    $ (cd frontend && npm run serve)
 
 Run on
 

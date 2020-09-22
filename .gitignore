@@ -278,3 +278,4 @@ quda/media/
 !.envs/.local/
 
 qudaDB
+frontend/.quasar/

@@ -14,23 +14,25 @@ q-layout
           q-form.q-gutter-md
             q-input(
               filled=''
-              v-model='username'
-              label='Tu usuario'
+              v-model='form.username'
+              label='Tu usuario o correo electrónico'
               lazy-rules=''
+              :rules="[() => !!form.username || 'Ingresa un nombre']"
             )
             q-input(
               filled=''
-              v-model='password'
+              v-model='form.password'
               :type="isPwd ? 'password' : 'text'"
               label='Tu contraseña'
               lazy-rules=''
+              :rules="[() => !!form.username || 'Ingresa un nombre']"
             )
               template(v-slot:append='')
                 q-icon.cursor-pointer(:name="isPwd ? 'visibility_off' : 'visibility'", @click='isPwd = !isPwd')
             div
             .col-6
               q-item
-                q-checkbox.full-width(dense='', outlined='', v-model='remember', label='Recuerdame')
+                q-checkbox.full-width(dense='', outlined='', v-model='form.remember', label='Recuerdame')
             q-btn(label='INGRESAR', to='/', type='button', color='primary')
 </template>
 
@@ -38,9 +40,11 @@ q-layout
 export default {
   data () {
     return {
-      username: '',
-      password: '',
-      remember: true,
+      form: {
+        username: '',
+        password: '',
+        remember: true
+      },
       isPwd: 'password'
     }
   }

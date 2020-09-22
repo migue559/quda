@@ -34,13 +34,15 @@ import createApp from './app.js'
 
 
 
-import qboot_Bootvuetify from 'boot/vuetify'
+import qboot_Bootapollo from 'boot/apollo'
 
 import qboot_Booti18n from 'boot/i18n'
 
 import qboot_Bootaxios from 'boot/axios'
 
 import qboot_Bootplugins from 'boot/plugins'
+
+import qboot_Bootguard from 'boot/guard'
 
 
 
@@ -79,7 +81,7 @@ async function start () {
   }
 
   const urlPath = window.location.href.replace(window.location.origin, '')
-  const bootFiles = [qboot_Bootvuetify,qboot_Booti18n,qboot_Bootaxios,qboot_Bootplugins]
+  const bootFiles = [qboot_Bootapollo,qboot_Booti18n,qboot_Bootaxios,qboot_Bootplugins,qboot_Bootguard]
 
   for (let i = 0; hasRedirected === false && i < bootFiles.length; i++) {
     if (typeof bootFiles[i] !== 'function') {

@@ -1,22 +1,18 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable object-property-newline */
 
 const routes = [
+  { path: '/auth/login', name: 'login', component: () => import('pages/auth/Login.vue') },
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '', component: () => import('layouts/Layout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
+      { path: '/', name: 'dashboard', component: () => import('pages/Dashboard.vue') }
     ]
-  },
-  {
-    path: '/auth/login',
-    component: () => import('pages/auth/Login.vue')
   },
   // Always leave this as last one,
   // but you can also remove it
-  {
-    path: '*',
-    component: () => import('pages/Error404.vue')
-  }
+  { path: '*', edirect: '/404' },
+  { path: '/404', name: '404', component: () => import('@/pages/errors/404.vue') }
 ]
 
 export default routes

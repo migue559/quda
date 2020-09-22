@@ -6,8 +6,6 @@ q-layout(view='hHr lpr fFr')
         q-avatar.q-mr-md
           img(src='~assets/img/dashboard/logo.png')
         | Instituto Mexicano del Seguro Social
-      a.float-right.q-mr-sm(style='font-size: 25px;', href='https://github.com/sponsors/mayank091193', target='_blank', title='Donate')
-        i.fas.fa-heart(style='color: #eb5daa')
       q-btn.q-mr-md(flat='', round='', dense='', icon='home')
         q-tooltip(content-class='bg-accent') INICIO
       q-btn.q-mr-md(flat='', round='', dense='', icon='account_box')
@@ -20,8 +18,7 @@ q-layout(view='hHr lpr fFr')
   q-drawer(show-if-above='', v-model='right', side='right', elevated='')
     RigthAside
   q-page-container
-    v-app
-      router-view
+    router-view
   q-footer.bg-footer.text-white
     q-toolbar
       span.q-mb-sm
@@ -35,6 +32,7 @@ q-layout(view='hHr lpr fFr')
 </style>
 
 <script>
+import { mapGetters } from 'vuex'
 import RigthAside from '@/layouts/aside/RigthAside.vue'
 export default {
   components: {
@@ -44,6 +42,17 @@ export default {
     return {
       right: false
     }
+  },
+  mounted () {
+    // check if current user is authenticated
+    if (!this.isAuthenticated) {
+      this.$router.push({ name: 'login' })
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'isAuthenticated'
+    ])
   }
 }
 </script>

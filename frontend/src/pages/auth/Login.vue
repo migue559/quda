@@ -25,7 +25,7 @@ q-layout
               :type="isPwd ? 'password' : 'text'"
               label='Tu contraseña'
               lazy-rules=''
-              :rules="[() => !!form.username || 'Ingresa un nombre']"
+              :rules="[() => !!form.password || 'Ingresa una contraseña']"
             )
               template(v-slot:append='')
                 q-icon.cursor-pointer(:name="isPwd ? 'visibility_off' : 'visibility'", @click='isPwd = !isPwd')

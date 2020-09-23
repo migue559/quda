@@ -18,6 +18,14 @@ class ModuleNode(DjangoObjectType):
 class OrganizationNode(DjangoObjectType):
     class Meta:
         model = Organization
+        interfaces = (graphene.relay.Node, )
+        filter_fields = {
+            'id': ['exact'],
+        }
+
+class OrganizationType(DjangoObjectType):
+    class Meta:
+        model = Organization
 
 ############################################################
 class UserNode(BaseNode):
@@ -53,15 +61,45 @@ class ObtainJSONWebToken(graphql_jwt.JSONWebTokenMutation):
 ############################################################
 class Query(object):
     verify_token = graphql_jwt.Verify.Field()
-    modelVar = graphene.Field(ModelVar, resolver=resolve_modelVar)
+    # modelVar = graphene.Field(ModelVar, resolver=resolve_modelVar)
     coreuser = graphene.relay.Node.Field(UserNode)
     coreuserQuery = DjangoFilterConnectionField(UserNode, sort=graphene.String())
+    #####
     coreorganization = graphene.relay.Node.Field(OrganizationNode)
+    coreorganizationQuery = DjangoFilterConnectionField(OrganizationNode, sort=graphene.String())
 
 class Mutation(object):
     token_auth = ObtainJSONWebToken.Field()
     refresh_token = graphql_jwt.Refresh.Field()
-    coreuserForm = UserMutation.Field()
+    # coreuserForm = UserMutation.Field()
 
-class Subscription(graphene.ObjectType):
-    pass
+class Subscription(object):
+    hello = graphene.String()
+    def resolve_hello(root, info):
+        return Observable.interval(1000).map(lambda i: datetime.datetime.now())
+
+    coreorganizationCreated = graphene.Field(OrganizationType)
+    def resolve_coreorganizationCreated(root, info):
+        return root.filter(
+            lambda event:
+                event.operation == CREATED and
+                isinstance(event.instance, Organization)
+        ).map(lambda event: event.instance)
+
+    coreorganizationUpdated = graphene.Field(OrganizationType, id=graphene.ID())
+    def resolve_coreorganizationUpdated(root, info, id):
+        return root.filter(
+            lambda event:
+                event.operation == UPDATED and
+                isinstance(event.instance, Organization) and
+                event.instance.pk == int(id)
+        ).map(lambda event: event.instance)
+
+    coreorganizationDeleted = graphene.Field(OrganizationType, id=graphene.ID())
+    def resolve_coreorganizationDeleted(root, info, id):
+        return root.filter(
+            lambda event:
+                event.operation == DELETED and
+                isinstance(event.instance, Organization) and
+                event.instance.pk == int(id)
+        ).map(lambda event: event.instance)

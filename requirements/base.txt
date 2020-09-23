@@ -25,12 +25,16 @@ django-cors-headers==3.5.0 # https://github.com/adamchainz/django-cors-headers
 
 # Third_apps
 # ------------------------------------------------------------------------------
-graphene_django
-django-filter
-django-graphql-jwt
+django-imagekit
 django-localflavor
 django-mptt
+
+graphene_django
+django-graphql-playground
+django-filter
+django-graphql-jwt
+
 channels
 channels_redis
 graphene-subscriptions
-django-graphql-playground
+

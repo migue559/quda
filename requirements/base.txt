@@ -17,6 +17,7 @@ django-model-utils==4.0.0  # https://github.com/jazzband/django-model-utils
 django-allauth==0.42.0  # https://github.com/pennersr/django-allauth
 django-crispy-forms==1.9.2  # https://github.com/django-crispy-forms/django-crispy-forms
 django-redis==4.12.1  # https://github.com/jazzband/django-redis
+
 # Django REST Framework
 djangorestframework==3.11.1  # https://github.com/encode/django-rest-framework
 django-cors-headers==3.5.0 # https://github.com/adamchainz/django-cors-headers
@@ -25,11 +26,8 @@ django-cors-headers==3.5.0 # https://github.com/adamchainz/django-cors-headers
 # Third_apps
 # ------------------------------------------------------------------------------
 graphene_django
-markdown
 django-filter
 django-graphql-jwt
-djangorestframework_simplejwt
-django-imagekit
 django-localflavor
 django-mptt
 channels

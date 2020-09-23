@@ -9,7 +9,7 @@ q-layout
         q-card-section
           .text-center.q-pt-lg
             .col.text-h6.ellipsis
-              | HERRAMIENTA DE CALIDAD DE DATOS
+              | CALIDAD DE DATOS
         q-card-section
           template(role='alert', v-if="errors.length >= 1" v-bind:class='{ show: errors.length }')
             span.text-negative(v-for='(error, i) in errors', :key='i')

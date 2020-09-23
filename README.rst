@@ -18,15 +18,12 @@ Features
 * For Django 3.0
 * For Vue-Clie 4.2
 * Works with Python 3.8
-* Works with NGINX
 * Renders Django projects with 100% starting test coverage
 * 12-Factor_ based settings via django-environ_
 * Secure by default. We believe in SSL.
 * Optimized development and production settings
-* Registration via django-allauth_
 * Docker support using docker-compose_ for development and production (using Traefik_ with LetsEncrypt_ support)
-* Customizable PostgreSQL & MongoDB version
-
+* Customizable SQLite_, RedisDB_ & MongoDB_ version
 
 Integrations
 ---------------------
@@ -38,12 +35,14 @@ Integrations
 
 .. _django-environ: https://github.com/joke2k/django-environ
 .. _12-Factor: http://12factor.net/
-.. _django-allauth: https://github.com/pennersr/django-allauth
 .. _Celery: http://www.celeryproject.org/
 .. _Flower: https://github.com/mher/flower
 .. _Sentry: https://sentry.io/welcome/
 .. _docker-compose: https://github.com/docker/compose
 .. _Traefik: https://traefik.io/
+.. _SQLite: https://www.sqlite.org/
+.. _RedisDB: https://redis.io/
+.. _MongoDB: https://www.mongodb.com/es
 .. _LetsEncrypt: https://letsencrypt.org/
 
 Prerequisites
@@ -51,8 +50,6 @@ Prerequisites
 
 * NODE.JS; if you don't have it yet, follow the `installation node instructions`_;
 * Docker; if you don't have it yet, follow the `installation instructions`_;
-* Docker Compose; refer to the official documentation for the `installation guide`_.
-
 
 .. _`installation node instructions`: https://nodejs.org
 .. _`installation instructions`: https://docs.docker.com/install/#supported-platforms
@@ -152,33 +149,8 @@ One final touch: should you ever need to merge ``.envs/production/*`` in a singl
 
 The ``.env`` file will then be created, with all your production envs residing beside each other.
 
-
 Tips & Tricks
 -------------
-
-Activate a Docker Machine
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This tells our computer that all future commands are specifically for the dev1 machine. Using the ``eval`` command we can switch machines as needed.::
-
-    $ eval "$(docker-machine env dev1)"
-
-Debugging
-~~~~~~~~~
-
-ipdb
-"""""
-
-If you are using the following within your code to debug: ::
-
-    import ipdb; ipdb.set_trace()
-
-Then you may need to run the following for it to work as desired: ::
-
-    $ docker-compose -f local.yml run --rm --service-ports django
-
-
-.. _Mailhog: https://github.com/mailhog/MailHog/
 
 .. _`CeleryTasks`:
 

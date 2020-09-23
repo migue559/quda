@@ -56,6 +56,7 @@ class Query(object):
     modelVar = graphene.Field(ModelVar, resolver=resolve_modelVar)
     coreuser = graphene.relay.Node.Field(UserNode)
     coreuserQuery = DjangoFilterConnectionField(UserNode, sort=graphene.String())
+    coreorganization = graphene.relay.Node.Field(OrganizationNode)
 
 class Mutation(object):
     token_auth = ObtainJSONWebToken.Field()

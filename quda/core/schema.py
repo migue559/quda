@@ -61,7 +61,8 @@ class ObtainJSONWebToken(graphql_jwt.JSONWebTokenMutation):
 ############################################################
 class Query(object):
     verify_token = graphql_jwt.Verify.Field()
-    # modelVar = graphene.Field(ModelVar, resolver=resolve_modelVar)
+    modelVar = graphene.Field(ModelVar, resolver=resolve_modelVar)
+    #####
     coreuser = graphene.relay.Node.Field(UserNode)
     coreuserQuery = DjangoFilterConnectionField(UserNode, sort=graphene.String())
     #####
@@ -71,13 +72,13 @@ class Query(object):
 class Mutation(object):
     token_auth = ObtainJSONWebToken.Field()
     refresh_token = graphql_jwt.Refresh.Field()
-    # coreuserForm = UserMutation.Field()
+    #####
+    coreuserForm = UserMutation.Field()
 
 class Subscription(object):
     hello = graphene.String()
     def resolve_hello(root, info):
         return Observable.interval(1000).map(lambda i: datetime.datetime.now())
-
     coreorganizationCreated = graphene.Field(OrganizationType)
     def resolve_coreorganizationCreated(root, info):
         return root.filter(
@@ -85,7 +86,6 @@ class Subscription(object):
                 event.operation == CREATED and
                 isinstance(event.instance, Organization)
         ).map(lambda event: event.instance)
-
     coreorganizationUpdated = graphene.Field(OrganizationType, id=graphene.ID())
     def resolve_coreorganizationUpdated(root, info, id):
         return root.filter(
@@ -94,7 +94,6 @@ class Subscription(object):
                 isinstance(event.instance, Organization) and
                 event.instance.pk == int(id)
         ).map(lambda event: event.instance)
-
     coreorganizationDeleted = graphene.Field(OrganizationType, id=graphene.ID())
     def resolve_coreorganizationDeleted(root, info, id):
         return root.filter(

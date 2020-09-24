@@ -2,9 +2,13 @@ import VueApollo from 'vue-apollo'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { split } from 'apollo-link'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 import JwtService from '@/core/services/jwt.service'
 
 const GRAPHQL_URL = 'http://localhost:8000/graphql/'
+const GRAPHQLWS_URL = 'ws://localhost:8000/graphql/'
 
 const getHeaders = () => {
   const headers = {
@@ -20,11 +24,28 @@ const httpLink = createHttpLink({
   headers: getHeaders()
 })
 
-const cache = new InMemoryCache()
+const wsLink = new WebSocketLink({
+  uri: GRAPHQLWS_URL,
+  headers: getHeaders(),
+  options: {
+    reconnect: true
+  }
+})
+
+const link = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+  },
+  wsLink,
+  httpLink
+)
 
 const apolloClient = new ApolloClient({
-  link: httpLink,
-  cache
+  link: link,
+  cache: new InMemoryCache(),
+  connectToDevTools: true
 })
 
 export const apolloProvider = new VueApollo({

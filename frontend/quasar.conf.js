@@ -48,6 +48,11 @@ module.exports = function (/* ctx */) {
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
+      env: {
+        APOLLOHTTP: process.env.APOLLOHTTP ? process.env.APOLLOHTTP : 'http://localhost:8000/graphql',
+        APOLLOWS: process.env.APOLLOWS ? process.env.APOLLOWS : 'ws://localhost:8000/graphql',
+      },
+
       // transpile: false,
 
       // Add dependencies for transpiling with Babel (Array of string/regex)

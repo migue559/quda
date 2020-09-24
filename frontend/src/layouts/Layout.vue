@@ -56,6 +56,7 @@ export default {
     if (!this.isAuthenticated) {
       this.$router.push({ name: 'login' })
     }
+    console.log('ENV: ', this.process)
   },
   computed: {
     ...mapGetters([

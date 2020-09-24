@@ -3,5 +3,5 @@ from graphene_subscriptions.signals import post_save_subscription, post_delete_s
 
 from .models import *
 
-post_save.connect(post_save_subscription, sender=Organization, dispatch_uid="your_model_post_save")
-post_delete.connect(post_delete_subscription, sender=Organization, dispatch_uid="your_model_post_delete")
+post_save.connect(post_save_subscription, sender=Organization, dispatch_uid="coreorganization_post_save")
+post_delete.connect(post_delete_subscription, sender=Organization, dispatch_uid="coreorganization_post_delete")

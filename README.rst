@@ -92,3 +92,84 @@ Run on
 
     http://localhost:8000/graphql/
 
+
+(Optionally) Designate your Docker Development Server IP
+--------------------------------------------------------
+
+When ``DEBUG`` is set to ``True``, the host is validated against ``['localhost', '127.0.0.1', '[::1]']``. This is adequate when running a ``virtualenv``. For Docker, in the ``config.settings.local``, add your host development server IP to ``INTERNAL_IPS`` or ``ALLOWED_HOSTS`` if the variable exists.
+
+
+.. _envs:
+
+Configuring the Environment
+---------------------------
+
+This is the excerpt from your project's ``local.yml``: ::
+
+  # ...
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.local/.postgres
+
+  # ...
+
+The most important thing for us here now is ``env_file`` section enlisting ``./.envs/.local/.postgres``. Generally, the stack's behavior is governed by a number of environment variables (`env(s)`, for short) residing in ``envs/``, for instance, this is what we generate for you: ::
+
+    .envs
+    ├── .local
+    │   ├── .django
+    │   └── .postgres
+    └── .production
+        ├── .django
+        └── .postgres
+
+By convention, for any service ``sI`` in environment ``e`` (you know ``someenv`` is an environment when there is a ``someenv.yml`` file in the project root), given ``sI`` requires configuration, a ``.envs/.e/.sI`` `service configuration` file exists.
+
+Consider the aforementioned ``.envs/.local/.postgres``: ::
+
+    # PostgreSQL
+    # ------------------------------------------------------------------------------
+    POSTGRES_HOST=postgres
+    POSTGRES_DB=quda
+    POSTGRES_USER=PWFeSirWlNbhefYoUJaYecUURTQisuhc
+    POSTGRES_PASSWORD=rtVOg3S2AsqbRtkAmuXjy60UsDsCE5Yw7igZiHvsBIfHUD6Hm5RTqPI2sMYwML6y
+
+The three envs we are presented with here are ``POSTGRES_DB``, ``POSTGRES_USER``, and ``POSTGRES_PASSWORD`` (by the way, their values have also been generated for you). You might have figured out already where these definitions will end up; it's all the same with ``django`` service container envs.
+
+One final touch: should you ever need to merge ``.envs/production/*`` in a single ``.env`` run the ``merge_production_dotenvs_in_dotenv.py``: ::
+
+    $ python merge_production_dotenvs_in_dotenv.py
+
+The ``.env`` file will then be created, with all your production envs residing beside each other.
+
+Tips & Tricks
+-------------
+
+.. _`CeleryTasks`:
+
+Celery tasks in local development
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+When not using docker Celery tasks are set to run in Eager mode, so that a full stack is not needed. When using docker the task
+scheduler will be used by default.
+
+If you need tasks to be executed on the main thread during development set CELERY_TASK_ALWAYS_EAGER = True in config/settings/local.py.
+
+Possible uses could be for testing, or ease of profiling with DJDT.
+
+.. _`CeleryFlower`:
+
+Celery Flower
+~~~~~~~~~~~~~
+
+`Flower`_ is a "real-time monitor and web admin for Celery distributed task queue".
+
+By default, it's enabled both in local and production environments (``local.yml`` and ``production.yml`` Docker Compose configs, respectively) through a ``flower`` service. For added security, ``flower`` requires its clients to provide authentication credentials specified as the corresponding environments' ``.envs/.local/.django`` and ``.envs/.production/.django`` ``CELERY_FLOWER_USER`` and ``CELERY_FLOWER_PASSWORD`` environment variables. Check out ``localhost:5555`` and see for yourself.
+
+.. _`Flower`: https://github.com/mher/flower

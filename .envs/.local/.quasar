@@ -1,0 +1,4 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+APOLLOHTTP = 'http://localhost:8000/graphql'
+APOLLOWS = 'ws://localhost:8000/graphql'

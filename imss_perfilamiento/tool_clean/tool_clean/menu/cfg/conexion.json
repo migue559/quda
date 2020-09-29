@@ -1,0 +1,37 @@
+{
+  "Process": [
+    {
+      "id": 1,
+      "name": ""
+    }
+  ],
+  "Connections": [
+    {
+      "id": 1,
+      "desc":"kerberos",
+      "conf":"{'hadoop.security.authentication': 'kerberos','hadoop.rpc.protection':'authenticate'}",
+      "ticket_path_keytab":"/home/centos/Documents/KeyTab/usrjaga1.keytab",
+      "ticket_path_cache":"FILE:/tmp/krb5cc_1000",
+      "host":"10.100.6.82",
+      "port":8020,
+      "principal":"jaga1@IMMS.GOB.MX",
+      "driver":"libhdfs",
+      "user_db": "ROMEROF_C73315",
+      "pass_db": "R0m3R0f$0001",
+      "host_db": "10.171.174.71",
+      "port_db": "1721",
+      "service_db": "ses12"
+    }
+  ],
+  "Scripts": [
+    {
+      "id": 100,
+      "idProcess": 1,
+      "name": "process_SUMMA_01_TruncateTable.py",
+      "args": {
+        "owner": "SESAADM",
+        "table": "TBL_SUMMA_RAW_SINIESTROS",
+        "idConnection": 1
+               }
+    }]
+}

@@ -1,22 +1,14 @@
-const ID_TOKEN_KEY = 'id_token'
-const ID_USERNAME = 'id_username'
 
 export const getToken = () => {
-  return window.localStorage.getItem(ID_TOKEN_KEY)
-}
-
-export const getUsername = () => {
-  return window.localStorage.getItem(ID_USERNAME)
+  return window.localStorage.getItem('userToken')
 }
 
 export const saveToken = token => {
-  window.localStorage.setItem(ID_TOKEN_KEY, token.token)
-  window.localStorage.setItem(ID_USERNAME, token.coreuser.id)
+  window.localStorage.setItem('userToken', token.token)
 }
 
 export const destroyToken = () => {
-  window.localStorage.removeItem(ID_TOKEN_KEY)
-  window.localStorage.removeItem(ID_USERNAME)
+  window.localStorage.removeItem('userToken')
 }
 
-export default { getToken, getUsername, saveToken, destroyToken }
+export default { getToken, saveToken, destroyToken }

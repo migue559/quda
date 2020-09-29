@@ -20,8 +20,6 @@ module.exports = function (/* ctx */) {
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
       'apollo',
-      'i18n',
-      'axios',
       'plugins',
       'guard'
     ],

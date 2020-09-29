@@ -1,102 +1,89 @@
 import { apolloService } from '@/core/services/apollo.service'
 import JwtService from '@/core/services/jwt.service'
-import { GET_TOKEN, VERIFY_TOKEN } from '@/core/models/auth'
-
-// action types
-export const VERIFY_AUTH = 'verifyAuth'
-export const LOGIN = 'login'
-export const LOGOUT = 'logout'
-export const REGISTER = 'register'
-export const UPDATE_USER = 'updateUser'
-// mutation types
-export const PURGE_AUTH = 'logOut'
-export const SET_AUTH = 'setUser'
-export const SET_ERROR = 'setError'
+import gql from 'graphql-tag'
 
 const apollo = apolloService.defaultClient
 
 const state = {
   errors: [],
-  user: {},
+  user: 'Anonymous User',
   isAuthenticated: !!JwtService.getToken()
 }
 
 const getters = {
-  currentUser (state) {
-    return state.user
-  },
-  isAuthenticated (state) {
-    return state.isAuthenticated
-  },
-  hasPermission: state => (permissions = undefined, hasperm = false) => {
-    if (!permissions) { return true }
-    if (!state.user.permissions) { return hasperm }
-    for (const permission of permissions) {
-      if (state.user.permissions.indexOf(permission) > -1) { hasperm = true; break }
-    }
-    return hasperm
-  },
-  hasModule (state) {
-    return state.isAuthenticated
-  }
+  currentUser (state) { return state.user },
+  isAuthenticated (state) { return state.isAuthenticated },
+  errors (state) { return state.errors }
 }
 
 const actions = {
-  async [LOGIN] (context, credentials) {
-    return await apollo
+  login (context, credentials) {
+    return apollo
       .mutate({
-        mutation: GET_TOKEN(credentials)
+        mutation: gql`
+          mutation {
+            tokenAuth (
+              username:"${credentials.username}"
+              password:"${credentials.password}"
+            )
+            {
+              token
+              payload
+            }
+          }
+        `
       }).then(({ data }) => {
-        context.commit(SET_AUTH, data.tokenAuth)
-        return data
+        context.commit('setAuth', data.tokenAuth)
       }).catch((error) => {
-        context.commit(SET_ERROR, error)
-        return 0
+        context.commit('setErrors', error)
       })
   },
-  async [VERIFY_AUTH] (context) {
+  verifyAuth (context) {
     const token = JwtService.getToken()
-    const username = JwtService.getUsername()
-    if (token && username) {
-      await apollo
-        .query({
-          query: VERIFY_TOKEN(token, username)
-        })
-        .then(({ data }) => {
-          context.commit(SET_AUTH, data)
-        })
-        .catch((error) => {
-          context.commit(SET_ERROR, error)
-          // context.commit(PURGE_AUTH)
-        })
-    } else {
-      context.commit(PURGE_AUTH)
-    }
+    if (!token) return 0
+    apollo
+      .query({
+        query: gql`
+          query {
+            verifyToken(token:"${token}")
+            {
+              payload
+            }
+          }
+        `
+      }).then(({ data }) => {
+        context.commit('setAuth', data.verifyToken)
+      })
+      // .then((data) => {
+      // console.log('setUser0: ', data.payload.username)
+      // apollo.subscribe({ query: this.$gql` subscription { hello } ` })
+      //   .subscribe({
+      //     next (data) { console.log(data) },
+      //     error (error) { console.error(error) }
+      //   })
+      // })
+      .catch(() => {
+        context.commit('purgeAuth')
+      })
   },
-  [LOGOUT] (context) {
-    context.commit(PURGE_AUTH)
+  logout (context) {
+    context.commit('purgeAuth')
   }
 }
 
 const mutations = {
-  [SET_ERROR] (state, error) {
-    state.errors = [error]
-  },
-  [SET_AUTH] (state, token) {
+  setAuth (state, token) {
     state.isAuthenticated = true
-    state.user = {
-      organization: token.coreuser.organization,
-      permissions: token.coreuser.getAllPermissions.substring(1, token.coreuser.getAllPermissions.length - 1).replace(/ /g, '').replace(/'/g, '').split(','),
-      username: token.coreuser.username,
-      visibleUsername: token.coreuser.visibleUsername,
-      id: token.coreuser.id
-    }
+    state.user = token.payload.username
     if ('token' in token) JwtService.saveToken(token)
   },
-  [PURGE_AUTH] (state) {
+  setErrors (state, error) {
+    state.errors = [error]
+  },
+  purgeAuth (state) {
     state.isAuthenticated = false
-    state.user = {}
-    state.errors = {}
+    state.user = 'Anonymous User'
+    state.errors = []
     JwtService.destroyToken()
   }
 }

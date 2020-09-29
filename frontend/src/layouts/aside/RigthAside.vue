@@ -3,7 +3,7 @@
   div.text-white(style='height: calc(100% - 117px);padding:10px;')
     q-toolbar
       q-toolbar-title.text-caption Bienvenido,
-        span.text-weight-bold  {{user.visibleUsername}}
+        span.text-weight-bold  {{currentUser}}
     hr
     q-scroll-area(style='height:100%;')
       q-list(padding='')
@@ -42,13 +42,13 @@
 </style>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   name: 'RigthAside',
   computed: {
-    ...mapState({
-      user: state => state.auth.user
-    })
+    ...mapGetters([
+      'currentUser'
+    ])
   }
 }
 </script>

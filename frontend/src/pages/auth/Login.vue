@@ -48,8 +48,7 @@ q-layout
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { LOGIN, LOGOUT } from '@/store/auth.store'
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -62,9 +61,10 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      errors: state => state.auth.errors
-    })
+    ...mapGetters([
+      'errors',
+      'isAuthenticated'
+    ])
   },
   methods: {
     validate () {
@@ -75,10 +75,10 @@ export default {
       if (this.validate()) {
         const username = this.form.username
         const password = this.form.password
-        this.$store.dispatch(LOGOUT)
-        this.$store.dispatch(LOGIN, { username, password })
-          .then((data) => {
-            if (data) this.$router.push({ name: 'dashboard' })
+        this.$store.dispatch('logout')
+        this.$store.dispatch('login', { username, password })
+          .then(() => {
+            if (this.isAuthenticated) this.$router.push({ name: 'dashboard' })
           })
       }
     }

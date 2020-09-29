@@ -33,30 +33,35 @@ export const GET_TOKEN = (credentials) => {
     `
 }
 
-export const VERIFY_TOKEN = (token, user) => {
+export const VERIFY_TOKEN = (token) => {
   return gql`
-  query {
-    verifyToken( token: "${token}" )
-    {
-      payload
-    }
-    coreuser( id: "${user}" ) {
-      id
-      username
-      visibleUsername
-      getAllPermissions
-      organization {
-        id
-        name
-        code
-        sites {
-          domain
-        }
-        modules {
-          name
+    query {
+      verifyToken( token: "${token}" )
+      {
+        payload {
+          username
+          exp
+          origIat
         }
       }
     }
-  }
   `
 }
+
+// coreuser( id: "${user}" ) {
+//   id
+//   username
+//   visibleUsername
+//   getAllPermissions
+//   organization {
+//     id
+//     name
+//     code
+//     sites {
+//       domain
+//     }
+//     modules {
+//       name
+//     }
+//   }
+// }

@@ -32,7 +32,6 @@ q-layout(view='hHr lpr fFr')
 </style>
 
 <script>
-import { LOGOUT } from '@/store/auth.store'
 import { mapGetters } from 'vuex'
 import RigthAside from '@/layouts/aside/RigthAside.vue'
 export default {
@@ -47,16 +46,14 @@ export default {
   methods: {
     onLogout () {
       this.$store
-        .dispatch(LOGOUT)
+        .dispatch('logout')
         .then(() => this.$router.push({ name: 'login' }))
     }
   },
   mounted () {
-    // check if current user is authenticated
     if (!this.isAuthenticated) {
       this.$router.push({ name: 'login' })
     }
-    console.log('ENV: ', this.process)
   },
   computed: {
     ...mapGetters([

@@ -22,17 +22,11 @@ services:
       - "8000:8000"
     command: /start
 
-  # postgres:
-  #   build:
-  #     context: .
-  #     dockerfile: ./compose/production/postgres/Dockerfile
-  #   image: quda_production_postgres
-  #   container_name: postgres
-  #   volumes:
-  #     - local_postgres_data:/var/lib/postgresql/data:Z
-  #     - local_postgres_data_backups:/backups:z
-  #   env_file:
-  #     - ./.envs/.local/.postgres
+  pyspark:
+    image: jupyter/pyspark-notebook:150731d32f85
+    container_name: pyspark
+    ports:
+      - "8888:8888"
 
   docs:
     image: quda_local_docs
@@ -63,7 +57,6 @@ services:
     container_name: celeryworker
     depends_on:
       - redis
-      # - postgres
     ports: []
     command: /start-celeryworker
 
@@ -73,7 +66,6 @@ services:
     container_name: celerybeat
     depends_on:
       - redis
-      # - postgres
     ports: []
     command: /start-celerybeat
 

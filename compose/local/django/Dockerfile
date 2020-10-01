@@ -3,6 +3,17 @@ FROM python:3.8-slim-buster
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
+RUN apt update \
+  # installing java 8
+  && apt install apt-transport-https ca-certificates wget dirmngr gnupg software-properties-common -y \
+  && wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - \
+  && add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ \
+  && mkdir -p /usr/share/man/man1 \
+  && apt update \
+  && apt install adoptopenjdk-8-hotspot -y
+
+ENV JAVA_HOME /usr/lib/jvm/adoptopenjdk-8-hotspot-amd64/bin/java
+
 RUN apt-get update \
   # dependencies for building Python packages
   && apt-get install -y build-essential \

@@ -38,3 +38,5 @@ channels
 channels_redis
 graphene-subscriptions
 
+pyspark
+findspark

@@ -279,3 +279,5 @@ quda/media/
 
 qudaDB
 frontend/.quasar/
+logs/*
+temp/

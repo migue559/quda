@@ -4,22 +4,6 @@ volumes:
   portainer_data: {}
 
 services:
-  django: &django
-    container_name: django
-    image: quda_local_django
-    depends_on:
-      - portainer
-    volumes:
-      - .:/app:z
-    working_dir: /app
-    env_file:
-      - ./.envs/.local/.django
-    ports:
-      - "8001:8001"
-    build:
-      context: .
-      dockerfile: ./compose/local/django/Dockerfile
-    command: /start
 
   portainer:
     container_name: portainer
@@ -33,29 +17,46 @@ services:
       - 8000:8000
     restart: always
 
-  docs:
-    container_name: docs
-    image: quda_local_docs
+  django: &django
+    container_name: django
+    image: quda_local_django
+    depends_on:
+      - redis
     volumes:
-      - ./docs:/docs:z
-      - ./config:/app/config:z
-      - ./quda:/app/quda:z
-    ports:
-      - "7000:7000"
-    build:
-      context: .
-      dockerfile: ./compose/local/docs/Dockerfile
+      - .:/app:z
+    working_dir: /app
     env_file:
       - ./.envs/.local/.django
-    working_dir: /docs
+    ports:
+      - "8001:8001"
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    command: /start
+
+  # docs:
+  #   container_name: docs
+  #   image: quda_local_docs
+  #   volumes:
+  #     - ./docs:/docs:z
+  #     - ./config:/app/config:z
+  #     - ./quda:/app/quda:z
+  #   ports:
+  #     - "7000:7000"
+  #   build:
+  #     context: .
+  #     dockerfile: ./compose/local/docs/Dockerfile
+  #   env_file:
+  #     - ./.envs/.local/.django
+  #   working_dir: /docs
 
   redis:
     container_name: redis
     image: redis:5.0
 
-  mongo:
-    container_name: mongo
-    image: mongo:4.2
+  # mongo:
+  #   container_name: mongo
+  #   image: mongo:4.2
 
   celeryworker:
     <<: *django
@@ -76,28 +77,30 @@ services:
     ports: []
     command: /start-celerybeat
 
-  flower:
-    <<: *django
-    container_name: flower
-    image: quda_local_flower
-    depends_on:
-      - celeryworker
-    ports:
-      - "5555:5555"
-    command: /start-flower
+  # flower:
+  #   <<: *django
+  #   container_name: flower
+  #   image: quda_local_flower
+  #   depends_on:
+  #     - celeryworker
+  #   ports:
+  #     - "5555:5555"
+  #   command: /start-flower
 
-  frontend:
-    container_name: frontend
+  quasar:
+    container_name: quasar
     image: quda_local_quasar
+    depends_on:
+      - django
     volumes:
-      - ./frontend:/app:z
+      - ./quasar:/app:z
     env_file:
       - ./.envs/.local/.quasar
     ports:
       - "8080:8080"
     build:
       context: .
-      dockerfile: ./compose/local/frontend/Dockerfile
+      dockerfile: ./compose/local/quasar/Dockerfile
     working_dir: /app
     command: npm run serve
     restart: on-failure
@@ -109,11 +112,10 @@ services:
       - "8081:80"
     depends_on:
       - django
-      - frontend
+      - quasar
     volumes:
-      - ./media/:/media/
-      - ./staticfiles/:/staticfiles/
-      - ./quda/static/:/static/
+      - ./quda/media/:/media/
+      - ./quda/staticfiles/:/static/
       - ./nginx/local.conf:/etc/nginx/nginx.conf:ro
     logging:
       driver: none

@@ -16,6 +16,8 @@ services:
       - 9000:9000
       - 8000:8000
     restart: always
+    logging:
+      driver: none
 
   django: &django
     container_name: django
@@ -53,6 +55,8 @@ services:
   redis:
     container_name: redis
     image: redis:5.0
+    logging:
+      driver: none
 
   # mongo:
   #   container_name: mongo
@@ -66,6 +70,8 @@ services:
       - redis
     ports: []
     command: /start-celeryworker
+    logging:
+      driver: none
 
   celerybeat:
     <<: *django
@@ -76,6 +82,8 @@ services:
       - celeryworker
     ports: []
     command: /start-celerybeat
+    logging:
+      driver: none
 
   # flower:
   #   <<: *django
@@ -117,5 +125,6 @@ services:
       - ./quda/media/:/media/
       - ./quda/staticfiles/:/static/
       - ./nginx/local.conf:/etc/nginx/nginx.conf:ro
+    restart: on-failure
     logging:
       driver: none

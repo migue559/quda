@@ -277,7 +277,7 @@ quda/media/
 .envs/*
 !.envs/.local/
 
-qudaDB
-frontend/.quasar/
+database
+quasar/.quasar/
 logs/*
 temp/
